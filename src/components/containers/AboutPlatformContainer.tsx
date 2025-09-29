@@ -1,9 +1,12 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { AboutPlatformPresenter } from '../presenters/AboutPlatformPresenter';
 
 export const AboutPlatformContainer: React.FC = () => {
+  const router = useRouter();
+
   const features = [
     {
       id: 1,
@@ -31,5 +34,15 @@ export const AboutPlatformContainer: React.FC = () => {
     }
   ];
 
-  return <AboutPlatformPresenter features={features} />;
+  const handleStartExploration = () => {
+    // Redirect ke halaman login
+    router.push('/auth');
+  };
+
+  return (
+    <AboutPlatformPresenter 
+      features={features}
+      onStartExploration={handleStartExploration}
+    />
+  );
 };

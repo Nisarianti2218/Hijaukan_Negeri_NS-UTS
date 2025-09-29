@@ -11,9 +11,10 @@ interface Feature {
 
 interface AboutPlatformPresenterProps {
   features: Feature[];
+  onStartExploration: () => void;
 }
 
-export const AboutPlatformPresenter: React.FC<AboutPlatformPresenterProps> = ({ features }) => {
+export const AboutPlatformPresenter: React.FC<AboutPlatformPresenterProps> = ({ features, onStartExploration }) => {
   return (
     <section id="about-platform" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +51,10 @@ export const AboutPlatformPresenter: React.FC<AboutPlatformPresenterProps> = ({ 
 
         {/* Call to Action */}
         <div className="text-center mt-16">
-          <button className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors duration-300 shadow-lg hover:shadow-xl">
+          <button 
+            onClick={onStartExploration}
+            className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
+          >
             Mulai Eksplorasi
           </button>
         </div>

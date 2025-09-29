@@ -4,9 +4,10 @@ import React from 'react';
 
 interface HeroPresenterProps {
   onGetStarted: () => void;
+  onLearnMore: () => void;
 }
 
-export const HeroPresenter: React.FC<HeroPresenterProps> = ({ onGetStarted }) => {
+export const HeroPresenter: React.FC<HeroPresenterProps> = ({ onGetStarted, onLearnMore }) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Gradient */}
@@ -35,7 +36,10 @@ export const HeroPresenter: React.FC<HeroPresenterProps> = ({ onGetStarted }) =>
             Mulai Berpartisipasi
           </button>
           
-          <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-green-600 transition-colors duration-300">
+          <button 
+            onClick={onLearnMore}
+            className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-green-600 transition-colors duration-300"
+          >
             Pelajari Lebih Lanjut
           </button>
         </div>
