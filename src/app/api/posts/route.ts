@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import { NextResponse } from "next/server";
-
-export async function GET() {
-    return NextResponse.json({ message: "API posts siap 🚀" });
-}
-=======
 import { NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
 import Post from '@/models/Post';
@@ -18,12 +11,21 @@ export async function GET() {
 export async function POST(req: Request) {
     await dbConnect();
     const { title, description, date, location, category, authorId, authorName, imageBase64 } = await req.json();
+    
     if (!title || !description || !date || !location || !authorId || !authorName) {
         return NextResponse.json({ error: 'invalid' }, { status: 400 });
     }
-    const post = await Post.create({ title, description, date, location, category, authorId, authorName, imageBase64 });
+    
+    const post = await Post.create({ 
+        title, 
+        description, 
+        date, 
+        location, 
+        category, 
+        authorId, 
+        authorName, 
+        imageBase64 
+    });
+    
     return NextResponse.json({ post }, { status: 201 });
 }
-
-
->>>>>>> feat_mongodb/30-09-2025

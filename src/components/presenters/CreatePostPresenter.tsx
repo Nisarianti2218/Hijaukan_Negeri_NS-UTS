@@ -166,6 +166,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
               />
               {imagePreview && (
                 <div className="mt-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={imagePreview} alt="preview" className="h-40 w-full object-cover rounded border" />
                 </div>
               )}

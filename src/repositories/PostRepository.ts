@@ -8,6 +8,7 @@ export interface Post {
   authorId: string;
   authorName: string;
   createdAt: string;
+  imageBase64?: string;
 }
 
 export class PostRepository {

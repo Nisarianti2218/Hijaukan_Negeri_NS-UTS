@@ -52,7 +52,7 @@ export class UserRepository {
       const parsed = JSON.parse(raw) as SessionPayload | User;
 
       // Backward compatibility: if legacy structure (plain User), clear it
-      if ((parsed as any).email && !(parsed as any).expiresAt) {
+      if ('email' in parsed && !('expiresAt' in parsed)) {
         localStorage.removeItem(this.SESSION_KEY);
         return null;
       }

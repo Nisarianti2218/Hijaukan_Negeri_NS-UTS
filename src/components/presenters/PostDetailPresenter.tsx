@@ -107,6 +107,7 @@ export const PostDetailPresenter: React.FC<PostDetailPresenterProps> = ({
           {/* Post Image */}
           {post.imageBase64 && (
             <div className="w-full h-64 md:h-80 bg-gray-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.imageBase64}
                 alt={post.title}

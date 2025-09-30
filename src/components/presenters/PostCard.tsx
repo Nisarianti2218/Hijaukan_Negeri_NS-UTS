@@ -39,6 +39,7 @@ export const PostCard: React.FC<PostCardProps> = ({
       {/* Image */}
       <div className="h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
         {post.imageBase64 ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img src={post.imageBase64} alt={post.title} className="h-48 w-full object-cover" />
         ) : (
           <div className="text-6xl opacity-60">{categoryIcon}</div>
