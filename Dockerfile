@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies including devDependencies for build
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -20,15 +20,18 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build the Next.js application
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV MONGODB_URI=mongodb+srv://hijaukan_negeri:hijaukannegeri123@cluster0.4cnypby.mongodb.net/hijaukan_negeri?retryWrites=true&w=majority&appName=Cluster0
+# Skip lint during build
+ENV NEXT_LINT=false
 RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -48,8 +51,8 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Start the Next.js application
 CMD ["node", "server.js"]
