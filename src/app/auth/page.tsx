@@ -110,7 +110,7 @@ export default function AuthPage() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={loginData.email}
                   onChange={e => setLoginData({ ...loginData, email: e.target.value })}
                   required
@@ -121,7 +121,7 @@ export default function AuthPage() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={loginData.password}
                   onChange={e => setLoginData({ ...loginData, password: e.target.value })}
                   required
@@ -142,7 +142,7 @@ export default function AuthPage() {
                 <input
                   type="text"
                   placeholder="Nama"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={registerData.name}
                   onChange={e => setRegisterData({ ...registerData, name: e.target.value })}
                   required
@@ -153,7 +153,7 @@ export default function AuthPage() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={registerData.email}
                   onChange={e => setRegisterData({ ...registerData, email: e.target.value })}
                   required
@@ -164,7 +164,7 @@ export default function AuthPage() {
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={registerData.password}
                   onChange={e => setRegisterData({ ...registerData, password: e.target.value })}
                   required
@@ -175,7 +175,7 @@ export default function AuthPage() {
                 <input
                   type="password"
                   placeholder="Konfirmasi Password"
-                  className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200"
+                  className="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500"
                   value={registerData.confirm}
                   onChange={e => setRegisterData({ ...registerData, confirm: e.target.value })}
                   required

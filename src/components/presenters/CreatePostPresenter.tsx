@@ -69,7 +69,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
                 type="text"
                 value={formData.title}
                 onChange={(e) => onInputChange('title', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 ${errors.title ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500 ${errors.title ? 'border-red-500' : 'border-gray-300'
                   }`}
                 placeholder="Contoh: Penanaman 100 Pohon Mangrove di Pantai Sanur"
               />
@@ -87,7 +87,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
                 value={formData.description}
                 onChange={(e) => onInputChange('description', e.target.value)}
                 rows={4}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 ${errors.description ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
                   }`}
                 placeholder="Jelaskan detail kegiatan, tujuan, dan manfaat yang akan didapat..."
               />
@@ -108,7 +108,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
                   type="date"
                   value={formData.date}
                   onChange={(e) => onInputChange('date', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 ${errors.date ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white ${errors.date ? 'border-red-500' : 'border-gray-300'
                     }`}
                 />
                 {errors.date && (
@@ -125,7 +125,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
                   type="text"
                   value={formData.location}
                   onChange={(e) => onInputChange('location', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 ${errors.location ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white placeholder-gray-500 ${errors.location ? 'border-red-500' : 'border-gray-300'
                     }`}
                   placeholder="Contoh: Pantai Sanur, Denpasar"
                 />
@@ -143,7 +143,7 @@ export const CreatePostPresenter: React.FC<CreatePostPresenterProps> = ({
               <select
                 value={formData.category}
                 onChange={(e) => onInputChange('category', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-200"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-200 text-gray-900 bg-white"
               >
                 {categories.map((category) => (
                   <option key={category.value} value={category.value}>
