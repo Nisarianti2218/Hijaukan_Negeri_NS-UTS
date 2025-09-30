@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  # Next.js Application
+  hijaukan-negeri-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hijaukan_negeri_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # MongoDB Database (Optional - for local development)
+  mongodb:
+    image: mongo:7-jammy
+    container_name: hijaukan_negeri_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: hijaukan_negeri
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

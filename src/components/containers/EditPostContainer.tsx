@@ -1,12 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CreatePostPresenter } from '../presenters/CreatePostPresenter';
+import { EditPostPresenter } from '../presenters/EditPostPresenter';
 import { PostRepository, Post } from '@/repositories/PostRepository';
 import { useAuth } from '@/hooks/useAuth';
 
-export const CreatePostContainer: React.FC = () => {
+interface EditPostContainerProps {
+  postId: string;
+}
+
+export const EditPostContainer: React.FC<EditPostContainerProps> = ({ postId }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -16,10 +20,51 @@ export const CreatePostContainer: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [imageBase64, setImageBase64] = useState<string | undefined>(undefined);
   const [imagePreview, setImagePreview] = useState<string | undefined>(undefined);
+  const [post, setPost] = useState<Post | null>(null);
   const router = useRouter();
   const { user } = useAuth();
+
+  useEffect(() => {
+    loadPost();
+  }, [postId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const loadPost = () => {
+    try {
+      const foundPost = PostRepository.getPostById(postId);
+      if (!foundPost) {
+        router.push('/posts');
+        return;
+      }
+
+      // Check if user owns this post
+      if (!user || foundPost.authorId !== user.id) {
+        router.push('/posts');
+        return;
+      }
+
+      setPost(foundPost);
+      setFormData({
+        title: foundPost.title,
+        description: foundPost.description,
+        date: foundPost.date,
+        location: foundPost.location,
+        category: foundPost.category || 'penanaman'
+      });
+      
+      if (foundPost.imageBase64) {
+        setImageBase64(foundPost.imageBase64);
+        setImagePreview(foundPost.imageBase64);
+      }
+    } catch (error) {
+      console.error('Error loading post:', error);
+      router.push('/posts');
+    } finally {
+      setInitialLoading(false);
+    }
+  };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -59,36 +104,28 @@ export const CreatePostContainer: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
-
-    if (!user) {
+    if (!validateForm() || !post || !user) {
       return;
     }
 
     setLoading(true);
 
     try {
-      const newPost: Post = {
-        id: Date.now().toString(),
+      const updatedData = {
         title: formData.title,
         description: formData.description,
         date: formData.date,
         location: formData.location,
         category: formData.category,
-        authorId: user.id,
-        authorName: user.name,
-        createdAt: new Date().toISOString(),
         imageBase64,
       };
 
-      PostRepository.savePost(newPost);
+      PostRepository.updatePost(postId, updatedData);
 
-      // Redirect to posts page
-      router.push('/posts');
+      // Redirect to post detail
+      router.push(`/posts/${postId}`);
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Error updating post:', error);
     } finally {
       setLoading(false);
     }
@@ -104,29 +141,50 @@ export const CreatePostContainer: React.FC = () => {
   };
 
   const handleImageChange = (file: File | null) => {
-    if (!file) {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setImageBase64(result);
+        setImagePreview(result);
+      };
+      reader.readAsDataURL(file);
+    } else {
       setImageBase64(undefined);
       setImagePreview(undefined);
-      return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      setImageBase64(base64);
-      setImagePreview(base64);
-    };
-    reader.readAsDataURL(file);
   };
 
+  const handleCancel = () => {
+    router.push(`/posts/${postId}`);
+  };
+
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-96">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return null;
+  }
+
   return (
-    <CreatePostPresenter
+    <EditPostPresenter
       formData={formData}
       errors={errors}
       loading={loading}
-      onInputChange={handleInputChange}
-      onSubmit={handleSubmit}
-      onImageChange={handleImageChange}
       imagePreview={imagePreview}
+      onInputChange={handleInputChange}
+      onImageChange={handleImageChange}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
     />
   );
 };
