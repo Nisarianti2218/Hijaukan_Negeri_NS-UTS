@@ -3,13 +3,20 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { HeroPresenter } from '../presenters/HeroPresenter';
+import { useAuth } from '@/hooks/useAuth';
 
 export const HeroContainer: React.FC = () => {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
 
   const handleGetStarted = () => {
-    // Redirect ke halaman login
-    router.push('/auth');
+    if (isAuthenticated()) {
+      // Jika sudah login, redirect ke posts
+      router.push('/posts');
+    } else {
+      // Jika belum login, redirect ke auth
+      router.push('/auth');
+    }
   };
 
   const handleLearnMore = () => {
@@ -24,6 +31,8 @@ export const HeroContainer: React.FC = () => {
     <HeroPresenter 
       onGetStarted={handleGetStarted}
       onLearnMore={handleLearnMore}
+      isAuthenticated={isAuthenticated()}
+      user={user}
     />
   );
 };

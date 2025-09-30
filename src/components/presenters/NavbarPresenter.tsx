@@ -7,6 +7,15 @@ interface NavItem {
   label: string;
   href: string;
   isActive?: boolean;
+  onClick?: () => void;
+}
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt: string;
 }
 
 interface NavbarPresenterProps {
@@ -14,6 +23,8 @@ interface NavbarPresenterProps {
   isMenuOpen: boolean;
   onToggleMenu: () => void;
   onCloseMenu: () => void;
+  user?: User | null;
+  isAuthenticated: boolean;
 }
 
 export const NavbarPresenter: React.FC<NavbarPresenterProps> = ({
@@ -21,6 +32,8 @@ export const NavbarPresenter: React.FC<NavbarPresenterProps> = ({
   isMenuOpen,
   onToggleMenu,
   onCloseMenu,
+  user,
+  isAuthenticated,
 }) => {
   return (
     <>
@@ -39,18 +52,32 @@ export const NavbarPresenter: React.FC<NavbarPresenterProps> = ({
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
+              {isAuthenticated && user && (
+                <div className="text-sm text-gray-600">
+                  Halo, <span className="font-semibold text-green-600">{user.name}</span>
+                </div>
+              )}
               {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`font-medium transition-colors duration-200 ${
-                    item.isActive
-                      ? 'text-green-600 border-b-2 border-green-600 pb-1'
-                      : 'text-gray-700 hover:text-green-600'
-                  }`}
-                >
-                  {item.label}
-                </Link>
+                item.onClick ? (
+                  <button
+                    key={item.href}
+                    onClick={item.onClick}
+                    className="font-medium transition-colors duration-200 text-gray-700 hover:text-green-600"
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`font-medium transition-colors duration-200 ${item.isActive
+                        ? 'text-green-600 border-b-2 border-green-600 pb-1'
+                        : 'text-gray-700 hover:text-green-600'
+                      }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
               ))}
             </div>
 
@@ -90,26 +117,42 @@ export const NavbarPresenter: React.FC<NavbarPresenterProps> = ({
 
         {/* Mobile Navigation Menu */}
         <div
-          className={`md:hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen 
-              ? 'max-h-64 opacity-100' 
+          className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen
+              ? 'max-h-64 opacity-100'
               : 'max-h-0 opacity-0 overflow-hidden'
-          }`}
+            }`}
         >
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t">
+            {isAuthenticated && user && (
+              <div className="px-3 py-2 text-sm text-gray-600 border-b border-gray-200">
+                Halo, <span className="font-semibold text-green-600">{user.name}</span>
+              </div>
+            )}
             {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onCloseMenu}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                  item.isActive
-                    ? 'text-green-600 bg-green-50 border-l-4 border-green-600'
-                    : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
-                }`}
-              >
-                {item.label}
-              </Link>
+              item.onClick ? (
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    item.onClick?.();
+                    onCloseMenu();
+                  }}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 text-gray-700 hover:text-green-600 hover:bg-green-50"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onCloseMenu}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${item.isActive
+                      ? 'text-green-600 bg-green-50 border-l-4 border-green-600'
+                      : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
           </div>
         </div>

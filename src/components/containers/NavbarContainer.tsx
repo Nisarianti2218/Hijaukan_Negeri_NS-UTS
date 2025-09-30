@@ -1,17 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { NavbarPresenter } from '../presenters/NavbarPresenter';
+import { useAuth } from '@/hooks/useAuth';
 
 export const NavbarContainer: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout, isAuthenticated } = useAuth();
 
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   const navItems = [
     {
@@ -29,11 +37,27 @@ export const NavbarContainer: React.FC = () => {
       href: '/community',
       isActive: pathname === '/community',
     },
-    {
-      label: 'Login',
-      href: '/auth',
-      isActive: pathname === '/auth',
-    },
+    ...(isAuthenticated() ? [
+      {
+        label: 'Buat Post',
+        href: '/create',
+        isActive: pathname === '/create',
+      }
+    ] : []),
+    ...(isAuthenticated() ? [
+      {
+        label: 'Logout',
+        href: '#',
+        isActive: false,
+        onClick: handleLogout,
+      }
+    ] : [
+      {
+        label: 'Login',
+        href: '/auth',
+        isActive: pathname === '/auth',
+      }
+    ]),
   ];
 
   const handleToggleMenu = () => {
@@ -50,6 +74,8 @@ export const NavbarContainer: React.FC = () => {
       isMenuOpen={isMenuOpen}
       onToggleMenu={handleToggleMenu}
       onCloseMenu={handleCloseMenu}
+      user={user}
+      isAuthenticated={isAuthenticated()}
     />
   );
 };
