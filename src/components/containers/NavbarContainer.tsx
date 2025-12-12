@@ -42,6 +42,11 @@ export const NavbarContainer: React.FC = () => {
         label: 'Buat Post',
         href: '/create',
         isActive: pathname === '/create',
+      },
+      {
+        label: 'Profile',
+        href: '/profile',
+        isActive: pathname === '/profile',
       }
     ] : []),
     ...(isAuthenticated() ? [

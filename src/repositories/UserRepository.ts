@@ -27,6 +27,25 @@ export class UserRepository {
     localStorage.setItem(this.USERS_KEY, JSON.stringify([...users, user]));
   }
 
+  static updateUser(updated: User): void {
+    const users = this.getAllUsers();
+    const idx = users.findIndex(u => u.id === updated.id);
+    if (idx === -1) return;
+    users[idx] = updated;
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+
+    // If the current session belongs to this user, update the session payload too
+    const session = this.getSession();
+    if (session && session.id === updated.id) {
+      this.setSession(updated);
+      // Trigger storage event fallback: write then remove a marker to fire storage in other tabs
+      try {
+        localStorage.setItem('__session_update_marker__', new Date().toISOString());
+        localStorage.removeItem('__session_update_marker__');
+      } catch { }
+    }
+  }
+
   static findUserByEmail(email: string): User | undefined {
     const users = this.getAllUsers();
     return users.find(user => user.email === email);
