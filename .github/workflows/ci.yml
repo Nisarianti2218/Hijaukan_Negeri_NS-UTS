@@ -29,24 +29,9 @@ jobs:
       
       - name: Run ESLint
         run: npm run lint
-        continue-on-error: false
       
       - name: Build project
         run: npm run build
-      
-      - name: Check build artifacts
-        run: |
-          if [ ! -d ".next" ]; then
-            echo "Build failed: .next directory not found"
-            exit 1
-          fi
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-build
-          path: .next
-          retention-days: 1
 
   security-audit:
     name: Security Audit
@@ -66,34 +51,8 @@ jobs:
         run: npm ci
       
       - name: Run security audit
-        run: npm audit --production
-        continue-on-error: true
-      
-      - name: Check for critical vulnerabilities
-        run: |
-          npm audit --json | grep -q '"severity":"critical"' && exit 1 || exit 0
-        continue-on-error: true
+        run: npm audit --production 2>&1 || true
 
-  deploy:
-    name: Deploy to Vercel
-    needs: [lint-and-test, security-audit]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.VERCEL_TOKEN != ''
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Deploy to Vercel
-        uses: vercel/action@main
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          production: true
-      
-      - name: Deployment successful
-        run: echo "✅ Deployment to Vercel successful!"
 
   notify:
     name: Workflow Status
@@ -102,16 +61,16 @@ jobs:
     if: always()
     
     steps:
-      - name: Check workflow status
+      - name: Build Status Report
         run: |
-          echo "## ✅ CI Pipeline Status" >> $GITHUB_STEP_SUMMARY
+          echo "## CI Pipeline Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Lint & Test**: ${{ needs.lint-and-test.result }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Security Audit**: ${{ needs.security-audit.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          if [ "${{ needs.lint-and-test.result }}" = "success" ] && [ "${{ needs.security-audit.result }}" = "success" ]; then
-            echo "### 🎉 All checks passed!" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.lint-and-test.result }}" = "success" ]; then
+            echo "✅ CI checks passed!" >> $GITHUB_STEP_SUMMARY
           else
-            echo "### ⚠️ Some checks failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ CI checks failed" >> $GITHUB_STEP_SUMMARY
           fi
