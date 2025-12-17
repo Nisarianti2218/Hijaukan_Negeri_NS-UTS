@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
             setSuccess("Profil berhasil diperbarui!");
             setEditing(false);
-        } catch (err) {
+        } catch {
             setError("Gagal menyimpan profil");
         } finally {
             setSaving(false);
