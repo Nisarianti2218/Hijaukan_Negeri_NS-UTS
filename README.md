@@ -96,12 +96,36 @@ src/
 └── utils/                 # Utility functions
 ```
 
+## � Panduan Authentikasi
+
+### Cara Login/Register
+Aplikasi menggunakan sistem authentikasi client-side berbasis **localStorage** untuk development.
+
+**Untuk pengguna baru:**
+1. Buka halaman aplikasi
+2. Klik tombol "Login" di navbar
+3. Di halaman `/auth`, klik tab **"📝 Register"**
+4. Isi form dengan data Anda (Nama, Email, Password)
+5. Klik "Register" - Anda akan otomatis login
+
+**Untuk pengguna yang sudah punya akun:**
+1. Klik tombol "Login" di navbar
+2. Isi email dan password Anda
+3. Klik "Login"
+
+**⚠️ Catatan Penting:**
+- Data disimpan di **localStorage** (lokal per device/browser)
+- Session berlaku **6 jam**
+- Untuk production, gunakan backend authentication dengan database
+
+📖 **Untuk panduan lengkap, lihat [AUTH_GUIDE.md](./AUTH_GUIDE.md)**
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 - **Node.js** 18.x atau lebih tinggi
 - **npm** atau **yarn** atau **pnpm**
-- **MongoDB** (lokal atau cloud)
+- **MongoDB** (lokal atau cloud - opsional, belum diintegrasikan di development)
 
 ### Installation
 
@@ -120,17 +144,9 @@ src/
    pnpm install
    ```
 
-3. **Environment setup**
+3. **Environment setup (opsional)**
    ```bash
    cp .env.example .env.local
-   ```
-   
-   Edit `.env.local`:
-   ```env
-   MONGODB_URI=your_mongodb_connection_string
-   NEXTAUTH_SECRET=your_secret_key
-   NEXTAUTH_URL=http://localhost:3000
-   NODE_ENV=development
    ```
 
 4. **Run development server**
@@ -146,6 +162,12 @@ src/
    ```
    http://localhost:3000
    ```
+
+### Testing Authentikasi
+Akses halaman auth di `http://localhost:3000/auth`:
+- **Register** akun baru dengan email dan password
+- **Login** dengan akun yang telah didaftarkan
+- Akses fitur yang memerlukan authentikasi (Buat Post, Profile, dll)
 
 ## 🐳 Docker Deployment
 
