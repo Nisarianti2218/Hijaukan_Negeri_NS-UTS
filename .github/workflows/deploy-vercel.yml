@@ -1,0 +1,50 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Vercel Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check Vercel secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "missing=true" >> $GITHUB_OUTPUT
+          else
+            echo "missing=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: ⚠️ Missing Vercel secrets
+        if: steps.check-secrets.outputs.missing == 'true'
+        run: |
+          echo "❌ Vercel secrets not configured!"
+          echo ""
+          echo "To enable automatic deployment, configure these GitHub Secrets:"
+          echo "  1. VERCEL_TOKEN"
+          echo "  2. VERCEL_ORG_ID"
+          echo "  3. VERCEL_PROJECT_ID"
+          echo ""
+          echo "See: https://github.com/${{ github.repository }}/settings/secrets/actions"
+          exit 0
+      
+      - name: Deploy to Vercel
+        if: steps.check-secrets.outputs.missing == 'false'
+        uses: vercel/action@main
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          production: true
+      
+      - name: ✅ Deployment successful
+        if: steps.check-secrets.outputs.missing == 'false'
+        run: echo "🎉 Application deployed to Vercel successfully!"
